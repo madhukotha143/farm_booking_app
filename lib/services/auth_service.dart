@@ -1,9 +1,11 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:farm_booking_app/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart';
 
 class AuthService {
-  final String baseUrl = 'https://bookyourfarms.com/api';
   final Dio _dio = Dio();
 
   AuthService() {
@@ -14,7 +16,7 @@ class AuthService {
   Future<User> login(String email, String password) async {
     try {
       final response = await _dio.post(
-        '$baseUrl/auth/login',
+        '${Constants.baseUrl}/api/auth/login',
         data: {
           'email': email,
           'password': password,
@@ -24,11 +26,12 @@ class AuthService {
 
       if (response.statusCode == 200) {
         final userData = response.data;
+        String encodedUserMap = jsonEncode(userData);
         final user = User.fromJson(userData);
 
         // Save token to shared preferences
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('token', user.accessToken!);
+        await prefs.setString('user', encodedUserMap);
 
         return user;
       } else {
@@ -53,16 +56,25 @@ class AuthService {
         // );
       }
 
-      await prefs.remove('token');
+      await prefs.remove('user');
     } catch (e) {
       throw Exception('Logout failed: $e');
     }
   }
 
+  Future<User?> getUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userJson = prefs.getString('user');
+    if (userJson != null) {
+      final userData = jsonDecode(userJson);
+      return User.fromJson(userData);
+    }
+    return null;
+  }
+
   Future<bool> isLoggedIn() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.containsKey('token') &&
-        prefs.getString('token')?.isNotEmpty == true;
+    return prefs.containsKey('user');
   }
 
   Future<String?> getToken() async {

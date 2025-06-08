@@ -1,4 +1,5 @@
 import 'package:farm_booking_app/provider/auth_provider.dart';
+import 'package:farm_booking_app/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -6,7 +7,7 @@ class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -93,11 +94,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         );
 
                         if (success && mounted) {
-                          // Navigator.of(context).pushReplacement(
-                          //   MaterialPageRoute(
-                          //     builder: (context) => const HomeScreen(),
-                          //   ),
-                          // );
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => const HomeScreen(),
+                            ),
+                          );
                         }
                       }
                     },

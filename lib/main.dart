@@ -1,4 +1,6 @@
 import 'package:farm_booking_app/provider/auth_provider.dart';
+import 'package:farm_booking_app/provider/home_screen_provider.dart';
+import 'package:farm_booking_app/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'screens/login_screen.dart';
@@ -17,6 +19,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(create: (context) => HomeScreenProvider()),
       ],
       child: MaterialApp(
         title: 'Farm Booking App',
@@ -24,10 +27,11 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.green,
           useMaterial3: true,
         ),
-        initialRoute: "/login",
+        initialRoute: "/splash",
         routes: {
+          '/splash': (context) => const SplashScreen(),
           '/login': (context) => const LoginScreen(),
-          // '/home': (context) => const HomeScreen(),
+          '/home': (context) => const HomeScreen(),
           // '/farm_detail': (context) => const FarmDetailScreen(),
         },
       ),
@@ -52,14 +56,14 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _checkLoginStatus() async {
-    // final isLoggedIn = await _authService.checkLoginStatus();
+    final isLoggedIn = await _authService.isLoggedIn();
 
-    // if (mounted) {
-    //   Navigator.pushReplacementNamed(
-    //     context,
-    //     isLoggedIn ? '/home' : '/login',
-    //   );
-    // }
+    if (mounted) {
+      Navigator.pushReplacementNamed(
+        context,
+        isLoggedIn ? '/home' : '/login',
+      );
+    }
   }
 
   @override
