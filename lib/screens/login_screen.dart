@@ -33,13 +33,19 @@ class _LoginScreenState extends State<LoginScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          return Padding(
+          return SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Form(
               key: _formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const SizedBox(height: 40),
+                  Image.asset(
+                    'assets/logo.png',
+                    height: 120,
+                  ),
+                  const SizedBox(height: 32),
                   TextFormField(
                     controller: _emailController,
                     decoration: const InputDecoration(
